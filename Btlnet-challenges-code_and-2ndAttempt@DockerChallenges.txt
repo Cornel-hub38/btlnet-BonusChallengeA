@@ -1,0 +1,259 @@
+
+
+##########################  Challenge-1   ################################################
+I have entered the docker container, installed vim and opened the following files:
+
+a.  docker-entrypoint.sh
+b  docker-entrypoint.d
+c.  vim /etc/hosts
+d.  vim /etc/resolv.conf
+e.  vim /etc/nsswitch
+f.  I tried turning my firewall off  ( no result )
+g:  apt-get install net-tools
+
+
+
+h.  ##### Challenge-2 ############
+See history  !79  and !80     configuration of the /etc/hosts file with google.com and googles ip address, as well as the etc/resolv.conf  have had no result in bypassing the proxy - and that is with the host firewall disabled
+i.  
+
+	===================================  
+
+ root@e3b56455cc9d:/etc# netstat -tulpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      1/nginx: master pro
+tcp6       0      0 :::8000                 :::*                    LISTEN      1/nginx: master pro
+         ======================================
+
+I have noticed in the code that EXPOSEDPORTS = FALSE  --->  could this be the source of my challenge?
+
+localhost:6443 (browser window) --->  Client sent an HTTP request to an HTTPS server.
+
+       +++++++++++++++++++   LOGS FROM DOCKER CONTAINER    ++++++++++++++++++++++++++++++
+
+root@e3b56455cc9d:/# history
+    1  apt-get update
+    2  apt get install vim
+    3  apt get install apache2 vim
+    4  ls
+    5  ls -l
+    6  vim docker-entrypoint.sh
+    7  apt-get install vim
+    8  ls -l
+    9  vim docker-entrypoint.sh
+   10  vim docker-entrypoint.d
+   11  ls -l
+   12  cd etc
+   13  ls -l
+   14  vim nsswitch.conf
+   15  vi /etc/resolv.conf
+   16  vi /etc/hosts
+   17  ss -tulpn
+   18  netstat -tulpn
+   19  apt-get install net-tools
+   20  netstat -tulpn
+   21  ls -l
+   22  vim bindresvport.blacklist
+   23  vim cron.daily
+   24  cd update-motd.d/
+   25  ls -l
+   26  unmae -a
+   27  uname -a
+   28  cd ..
+   29  vim bash.bashrc
+   30  pwd
+   31  cd ..
+   32  pwd
+   33  ls -l
+   34  cd home
+   35  ls -ltr
+   36  curl google.com
+   37  docker run -it btlnet/challenge-2 bash
+   38  docker run -it btlnet/challenge-2 /bin/bash
+   39  curl -v google.com
+   40  cd /var
+   41  ls -l
+   42  cd log
+   43  ls -l
+   44  cd nginx
+   45  ls -l
+   46  vim error.log
+   47  vim access.log
+   48  which html
+   49  cd /
+   50  which html
+   51  which hello
+   52  which Hello
+   53  which tmp
+   54  which etc
+   55  which kjbbnkhk
+   56  apropos nginx
+   57  apt-get install apropos
+   58  apropos nginx
+   59  history
+root@e3b56455cc9d:/#
+
+======================================================================
+
+5 Methods to Solve the Localhost Refused to Connect Error
+Temporarily Disable Your Firewall. A firewall is a security system that monitors and filters your traffic, blocking potential threats. ...
+Flush Your DNS. ...
+Connect with Specified Port. ...
+Ensure Apache Is Running. ...
+Go Through Browser Settings.
+
+#############################################################################################
+
+
+#############################################  entry into files on docker #########################################
+
+
+
+===============   docker-entrypoint.sh    ===========================================
+
+
+
+
+#!/bin/sh
+# vim:sw=4:ts=4:et
+
+set -e
+
+if [ -z "${NGINX_ENTRYPOINT_QUIET_LOGS:-}" ]; then
+    exec 3>&1
+else
+    exec 3>/dev/null
+fi
+
+if [ "$1" = "nginx" -o "$1" = "nginx-debug" ]; then
+    if /usr/bin/find "/docker-entrypoint.d/" -mindepth 1 -maxdepth 1 -type f -print -quit 2>/dev/null | read v; then
+        echo >&3 "$0: /docker-entrypoint.d/ is not empty, will attempt to perform configuration"
+
+        echo >&3 "$0: Looking for shell scripts in /docker-entrypoint.d/"
+        find "/docker-entrypoint.d/" -follow -type f -print | sort -n | while read -r f; do
+            case "$f" in
+
+
+==================================================================================
+
+
+#!bin/sh
+-rwxrwxr-x   1 root root 1202 Sep 10  2020 docker-entrypoint.sh
+" ============================================================================
+" Netrw Directory Listing                                        (netrw v156)
+"   /docker-entrypoint.d
+"   Sorted by      name
+"   Sort sequence: [\/]$,\<core\%(\.\d\+\)\=\>,\.h$,\.c$,\.cpp$,\~\=\*$,*,\.o$,\.obj$,\.info$,\.swp$,\.bak$,\~$
+"   Quick Help: <F1>:help  -:go up dir  D:delete  R:rename  s:sort-by  x:special
+" ==============================================================================
+../
+./
+10-listen-on-ipv6-by-default.sh*
+20-envsubst-on-templates.sh*
+~
+~
+
+=======================  vim /etc/resolv.conf    ====================================
+# DNS requests are forwarded to the host. DHCP DNS options are ignored.
+nameserver 192.168.65.5
+
+
+==========================  vim /etc/host   ==================================
+
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.2      e3b56455cc9d
+
+
+########################################################
+
+
+
+#############################################   CHALLENGE 2   DOCKER CONTAINER   ###################################
+
+
+
+
+
+root@edd9d746a9ab:/usr/bin# history
+    1  ls
+    2  cd etc
+    3  ls -l
+    4  ping google.com
+    5  cd ..
+    6  ping google.com
+    7  apt-get install iputils-ping
+    8  sudo apt-get update
+    9  apt-get update
+   10  ping google.com
+   11  apt-get install iputils-ping
+   12  ping google.com
+   13  curl goole.com
+   14  curl google.com
+   15  apt-get install curl
+   16  curl google.com
+   17  which myproxy.local
+   18  cd /etc
+   19  ls -ltr
+   20  vi hosts
+   21  aptget install vim
+   22  apt-get install vim
+   23  vi hosts
+   24  ping google.com
+   25  curl google.com
+   26  curl --proxy $http_proxy www.google.com
+   27  curl --proxy $http_proxy https://www.google.com
+   28  ls -l
+   29  vi bash.bash.rc
+   30  vi bash.basrc
+   31  vi bash.bashrc
+   32  cd ..
+   33  pwd
+   34  ls -l
+   35  cd boot
+   36  ls
+   37  cd ..
+   38  ls
+   39  cd usr
+   40  ls
+   41  cd bin
+   42  ls
+   43  ls -l
+   44  vi curl
+   45  history
+root@edd9d746a9ab:/usr/bin# 
+
+45  history
+   46  ip addr show
+   47  ifconfig
+   48  ipconfig
+   49  dig google.com
+   50  nslookup google.com
+   51  ping google.com
+   52  ping 216.58.213.14
+   53  curl 216.58.213.14
+   54  find /name -myproxy.local
+   55  find /name myproxy.local
+   56  help --find
+   57  man find
+   58  curl -O https://google.com
+   59  man find
+   60  man locate
+   61  apt-get install findutils
+   62  find myproxy.local
+   63  vi /etc/resolv.conf
+   64  curl -O https://google.com
+   65  curl google.com
+   66  vi /etc/nsswitch.conf
+   67  vi /etc/hosts
+   68  curl google.com
+   69  !  curl: (5) Could not resolve proxy: myproxy.local
+   70  !  I tried editing the /etc/hosts file as well as the  /etc/resolv.conf files to bypass the  proxy, but still no result
+   71  !   it has been suggested that the Dockerfile needs to have the curl command embedded in it
+   72  history
+root@edd9d746a9ab:/usr/bin#
