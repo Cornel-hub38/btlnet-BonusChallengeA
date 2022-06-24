@@ -1,0 +1,256 @@
+
+
+============================   SOLUTION TO BONUS  =================================
+
+
+# Author:   Cornel  Earle
+# Purpose of script - To create a cron file which will watch the /etc/passwd file every 15 minutes for changes or access
+# Date:  19 June 2022   04:18am
+
+
+
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+
+#  run cronjob every 15 minutes
+*/15 * * * *   -w /etc/passwd -p wa -k /var/log
+
+=================================================================================================
+
+git@github.com:Cornel-hub38/btlnet-BonusChallengeA.git   --  github link
+=================================================================================================
+
+
+############################  ATTEMPT TO READ CONTENTS OF DOCKER CONTAINER  ######################################
+
+
+I started logging my progress or rather lack of progress on this devops challenge a little late so all my efforts are not recorded here.  
+
+a.  I have watched a large number of youtube videos and still I have not truely made a dent in this - challenge 1.   All the commands I have tried, are listed above
+
+b.  I can now get into the container using a bash shell but I cannot open any files in the container, so the contents and port mappings remain a mystery.  One command yielded what appeared to be a result - [  Netstat -tulpn ]  -  but none of the many port numbers described as established, yielded a solution.  That was a bit of brute force but that too was unsuccessful.   I can read the contents of the container but cannot vi, nano or cat them hance no luck.
+
+localhost:80
+localhost:103
+localhost:8000
+
+
+
+
+c.  I am for lack of skill unable to copy the contents of the container unto the host.  My approach here was to vi into the code and read the contents.
+
+root@ad40f7874251:/docker-entrypoint.d# ls -l
+total 8
+-rwxrwxr-x 1 root root 1957 Sep 10  2020 10-listen-on-ipv6-by-default.sh
+-rwxrwxr-x 1 root root 1037 Sep 10  2020 20-envsubst-on-templates.sh
+
+
+
+
+d.  I did go through the logs, after typing docker logs ad40f7874251   but the were no obvious clues in the logs
+
+
+############################################################
+
+Fetch the logs of the container
+PS C:\Users\user\Desktop\AWS\LearnDocker> docker logs ad40f7874251
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: error: /etc/nginx/conf.d/default.conf differs from the packaged version
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+PS C:\Users\user\Desktop\AWS\LearnDocker> 
+
+
+PS C:\Users\user\Desktop\AWS\LearnDocker> netstat
+
+Active Connections
+
+  Proto  Local Address          Foreign Address        State
+  TCP    127.0.0.1:20121        kubernetes:57990       TIME_WAIT
+  TCP    127.0.0.1:20121        kubernetes:58014       FIN_WAIT_2
+  TCP    127.0.0.1:55797        kubernetes:55798       ESTABLISHED
+  TCP    127.0.0.1:55798        kubernetes:55797       ESTABLISHED
+  TCP    127.0.0.1:55967        kubernetes:55968       ESTABLISHED
+  TCP    127.0.0.1:55968        kubernetes:55967       ESTABLISHED
+  TCP    127.0.0.1:58014        kubernetes:20121       CLOSE_WAIT
+  TCP    127.0.0.1:61728        kubernetes:61729       ESTABLISHED
+  TCP    127.0.0.1:61729        kubernetes:61728       ESTABLISHED
+  TCP    127.0.0.1:61742        kubernetes:61743       ESTABLISHED
+  TCP    127.0.0.1:61743        kubernetes:61742       ESTABLISHED
+  TCP    127.0.0.1:61744        kubernetes:61745       ESTABLISHED
+  TCP    127.0.0.1:61745        kubernetes:61744       ESTABLISHED
+  TCP    127.0.0.1:61746        kubernetes:61747       ESTABLISHED
+  TCP    127.0.0.1:61747        kubernetes:61746       ESTABLISHED
+  TCP    127.0.0.1:61748        kubernetes:61749       ESTABLISHED
+  TCP    127.0.0.1:61749        kubernetes:61748       ESTABLISHED
+  TCP    127.0.0.1:61750        kubernetes:61751       ESTABLISHED
+  TCP    127.0.0.1:61751        kubernetes:61750       ESTABLISHED
+  TCP    127.0.0.1:61752        kubernetes:61753       ESTABLISHED
+  TCP    127.0.0.1:61753        kubernetes:61752       ESTABLISHED
+  TCP    127.0.0.1:61754        kubernetes:61755       ESTABLISHED
+  TCP    127.0.0.1:61755        kubernetes:61754       ESTABLISHED
+  TCP    127.0.0.1:61756        kubernetes:61757       ESTABLISHED
+  TCP    127.0.0.1:61757        kubernetes:61756       ESTABLISHED
+  TCP    127.0.0.1:61758        kubernetes:61759       ESTABLISHED
+  TCP    127.0.0.1:61759        kubernetes:61758       ESTABLISHED
+  TCP    127.0.0.1:61760        kubernetes:61761       ESTABLISHED
+  TCP    127.0.0.1:61761        kubernetes:61760       ESTABLISHED
+  TCP    127.0.0.1:61762        kubernetes:61763       ESTABLISHED
+  TCP    127.0.0.1:61763        kubernetes:61762       ESTABLISHED
+  TCP    127.0.0.1:62702        kubernetes:62703       ESTABLISHED
+  TCP    127.0.0.1:62703        kubernetes:62702       ESTABLISHED
+  TCP    127.0.0.1:62807        kubernetes:62808       ESTABLISHED
+  TCP    127.0.0.1:62808        kubernetes:62807       ESTABLISHED
+  TCP    127.0.0.1:64615        kubernetes:64616       ESTABLISHED
+  TCP    127.0.0.1:64616        kubernetes:64615       ESTABLISHED
+  TCP    127.0.0.1:64619        kubernetes:64620       ESTABLISHED
+  TCP    127.0.0.1:64620        kubernetes:64619       ESTABLISHED
+  TCP    192.168.1.253:57528    ec2-35-174-127-31:https  ESTABLISHED
+  TCP    192.168.1.253:57540    lb-140-82-112-25-iad:https  ESTABLISHED
+  TCP    192.168.1.253:57572    162.125.19.9:https     ESTABLISHED
+  TCP    192.168.1.253:57540    lb-140-82-112-25-iad:https  ESTABLISHED
+  TCP    192.168.1.253:57572    162.125.19.9:https     ESTABLISHED
+  TCP    192.168.1.253:57540    lb-140-82-112-25-iad:https  ESTABLISHED
+  TCP    192.168.1.253:57572    162.125.19.9:https     ESTABLISHED
+  TCP    192.168.1.253:57540    lb-140-82-112-25-iad:https  ESTABLISHED        TCP    192.168.1.253:57866    192.168.1.241:8060     CLOSE_WAIT
+  TCP    192.168.1.253:57540    lb-140-82-112-25-iad:https  ESTABLISHED      
+  TCP    192.168.1.253:57572    162.125.19.9:https     ESTABLISHED      
+  TCP    192.168.1.253:57865    192.168.1.241:8060     CLOSE_WAIT                    BLISHED
+  TCP    192.168.1.253:57866    192.168.1.241:8060     CLOSE_WAIT                    BLISHED
+  TCP    192.168.1.253:57933    ec2-52-0-218-127:https  TIME_WAIT                ESTA
+  TCP    192.168.1.253:57934    ec2-50-16-7-188:https  ESTABLISHED               ESTABLIS
+  TCP    192.168.1.253:57936    13.69.116.104:https    TIME_WAIT               
+  TCP    192.168.1.253:62468    81.19.104.213:https    ESTABLISHED               ESTA
+  TCP    192.168.1.253:62473    162.125.19.131:https   ESTABLISHED      
+  TCP    192.168.1.253:62478    20.54.37.64:https      ESTABLISHED             
+  TCP    [2a00:23c5:d10e:f601:3551:97ce:4c9a:b16f]:57563  bt1:https     
+         ESTABLISHED
+  TCP    [2a00:23c5:d10e:f601:3551:97ce:4c9a:b16f]:57864  wf-in-f188:5228    8        ESTABLISHED
+PS C:\Users\user\Desktop\AWS\LearnDocker>
+
+
+docker container port ad40f7874251
+
+
+#####################################
+
+PS C:\Users\user\Desktop\AWS\LearnDocker> history
+
+  Id CommandLine
+  -- -----------
+   1 docker ps -a
+   2 docker run -d -p localhost:8000
+   3 docker run -d -p localhost:8000 7a8009a96e0a
+   4 docker run --help
+   5 docker start -d btlnet/challenge-1
+   6 docker ps -a
+   7 docker run -d btlnet/challenge-1
+   8 docker ps -a
+   9 docker exec ad40f7874251
+  10 ls
+  11 pwd
+  12 docker ps -a
+  13 python -m unittest
+  14 docker logs
+  15 docker logs ad40f7874251
+  16 ps -a
+  17 docker ps -a
+  18 ls -l
+  19 ls
+  20 cd /etc
+  21 netsat -tulpn
+  22 netstat
+  23 netstat -tulp | grep nginx
+  24 top
+  25 ss -tulpn
+  26 docker images
+  27 docker container ps
+  28 docker container logs
+  29 docker container logs ad40f7874251
+  30 docker container logs --details  ad40f7874251
+  31 docker container logs --details -t ad40f7874251
+  32 docker ps
+  33 docker container logs nginx mystifying_joliot
+  34 docker container logs nginx
+  35 docker container logs ad40f7874251
+  36 docker container logs --follow ad40f7874251
+  37 docker ps
+  38 docker container --details ad40f7874251
+  39 docker container port ad40f7874251
+  40 docker container --port ad40f7874251
+  41 docker container --help port
+  42 docker container port ad40f7874251
+  43 history
+  44 !29
+  45 docker logs PS C:\Users\user\Desktop\AWS\LearnDocker> history...
+  46 docker container logs ad40f7874251
+  47 cat 20-envsubst-on-templates.sh
+  48 docker stop ad40f7874251
+  49 docker ps -a
+  50 docker run -it -d --entrypoint=bash ad40f7874251
+  51 docker ps -a
+  52 docker pull btlnet/challenge-1
+  53 docker --help
+  54 docker restart ad40f7874251
+  55 docker ps
+  56 systemctl status docker.service
+  57 docker container ls
+  58 docker inspect --format='' ad40f7874251
+  59 docker stop ad40f7874251
+  60 docker container ls
+  61 docker start ad40f7874251
+  62 docker ps
+  63 docker container ls
+  64 docker port test
+  65 docker port test
+  66 docker port ad40f7874251
+  67 docker port 8000/tcp ad40f7874251
+  68 docker port ad40f7874251 8000/tcp
+  69 docker port ad40f7874251 8080/tcp
+  70 docker port ad40f7874251 localhost/tcp
+  71 docker ps
+  72 docker stats
+  73 docker ps
+  74 docker --publish ad40f7874251
+  75 docker --publish --help
+  76 docker --help publish
+  77 docker run -p ad40f7874251
+  78 docker run --expose 8000 ubuntu bash
+  79 ps
+  80 docker ps
+  81 docker run -p 127.0.0.1:80:8000/tcp ubuntu bash
+
+  82 history
+  83 docker logs ad40f7874251
+  84 docker images
+  85 docker top
+  86 docker top ad40f7874251
+  87 docker exec -it ad40f7874251 /bin/bash
+  88 docker run btlnet/challenge-1 --name btlnet-1 -p 80:80 nginx:1.5.8-alpine
+  89 docker run btlnet/challenge-1 -d --rm --name btlnet-1 -p 80:80 nginx:1.5.8-alpine
+  90 docker run -d --rm --name mybtl ad40f7874251  -p 80:80 nginx:1.5.8-alpine
+  91 docker run -d --rm ad40f7874251  -p 80:80 nginx:1.5.8-alpine
+  92 ps
+  93 docker ps
+  94 docker run -d --rm ad40f7874251  -p 80:8000 nginx:1.5.8-alpine
+  95 docker start -d --rm ad40f7874251  -p 80:8000 nginx:1.5.8-alpine
+  96 docker rm ad40f7874251
+  97 docker stop ad40f7874251
+  98 docker run -d --rm btlnet/challenge-1 80:8000
+  99 docker run -d btlnet/challenge-1 80:8000
+ 100 ps
+ 101 docker ps
+ 102 docker run -d 8b09322aeec9c098553b1ca9f6a08a06ac94a69ea06ccf576e3c48a279b52cfe 80:8000
+######################################
+
+
+
+
+
+
+
+
